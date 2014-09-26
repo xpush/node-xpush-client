@@ -1,0 +1,35 @@
+{
+  "name": "xpush-client",
+  "description": "Realtime communication channel server and node module.",
+  "version": "0.0.2",
+  "keywords": [
+    "push",
+    "websocket",
+    "gcm",
+    "apn",
+    "channel",
+    "client"
+  ],
+  "contributors": [
+    {
+      "name": "John Kim",
+      "email": "yohany@gmail.com"
+    },
+    {
+      "name": "James Jung",
+      "email": "0nlyoung7@gmail.com"
+    }
+  ],
+  "dependencies": {
+    "socket.io-client": "1.1.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/xpush/node-xpush-client"
+  },
+  "license": "MIT",
+  "scripts": {
+    "test": "node test"
+  },
+  "homepage": "https://github.com/xpush/node-xpush-client"
+}
