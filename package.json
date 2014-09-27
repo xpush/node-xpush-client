@@ -1,7 +1,7 @@
 {
   "name": "xpush-client",
   "description": "Realtime communication channel server and node module.",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "keywords": [
     "push",
     "websocket",
