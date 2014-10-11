@@ -1,7 +1,7 @@
-var XPush = require( './index' );
+var XPush = require( '../index' );
 var assert = require('assert');
 
-var xpush;
+var xpush, xpush1, xpush2;
 
 var USERS = ['user1','user2','user3','user4'];
 var PASS = ['win1234','win1234','win1234','win1234'];
@@ -14,9 +14,12 @@ describe('XPUSH Client Test', function(){
 
 	  xpush1 = new XPush('http://demo.stalk.io:8000', 'xpush-client' );
 
+	  // Login lately
+	  xpush2 = new XPush('http://demo.stalk.io:8000', 'xpush-client' );
+
 	});
 
-  this.timeout(5000);
+  this.timeout(10000);
 
 	describe("#Signup Users", function() {
 		console.log('\n\n- - - - - - - - -');
@@ -124,6 +127,15 @@ describe('XPUSH Client Test', function(){
 	describe("#Channel Manage Test", function() {
 		console.log('\n\n- - - - - - - - -');
 
+		it("Update Channel", function(done) {
+
+    	xpush.updateChannel( 'channel02', { $set:{'DT':{'NM':'updateChannelName03'}}}, function(err, result){
+    		assert.equal( 'updateChannelName03', result.DT.NM );
+    		done()
+     	});
+
+		});
+
 		it("Exit Channel", function(done) {
 
 			xpush.exitChannel(randomChannel, function(err, data){
@@ -145,12 +157,91 @@ describe('XPUSH Client Test', function(){
 		it("Join Channel", function(done) {
 
     	xpush.joinChannel( 'channel01', {'U':['user3']}, function(result){
-				assert.equal(result.status, "ok");
-				done();
+	    	xpush.getChannelData( 'channel01', function(err, result){
+					assert.equal(3, result.US.length);
+					done();
+				});
 			});
 
 		});
 
 	});
 
+	describe("#Group Manage Test", function() {
+		console.log('\n\n- - - - - - - - -');
+
+		it("addUserToGroup", function(done) {
+
+    	xpush.addUserToGroup( 'user1', ['user2','user3'], function( err, result ){
+    		xpush.getGroupUsers( 'user1', function( err, result ){
+	    		assert.equal( 2,  result.length );
+	    		done();
+    		});
+     	});
+
+		});
+
+		it("removeUserFromGroup", function(done) {
+
+    	xpush.removeUserFromGroup( 'user1', 'user2', function( err, result ){
+    		xpush.getGroupUsers( 'user1', function( err, result ){
+	    		assert.equal( 1,  result.length );
+	    		done();
+    		});
+     	});
+
+		});
+
+	});
+
+	describe("#Message Test", function() {
+		console.log('\n\n- - - - - - - - -');
+
+		it("send message", function(done) {
+
+			xpush.on( 'message', function( ch, name, data ){
+        assert.equal(data.MG, 'Hello world');
+        checkComplete();
+			});
+
+			xpush1.on( 'message', function( ch, name, data ){
+        assert.equal(data.MG, 'Hello world');
+        checkComplete();
+			});
+
+      xpush.send( 'channel01', 'message', {'MG':'Hello world'} );
+
+      var count = 2;
+      var checkComplete = function(){       
+        --count; 
+        if( !count) {
+          done();
+        }
+      };
+
+		});
+
+    it("unread message user3", function(done) {
+
+    	xpush2.on( 'message', function( ch, name, data ){
+				assert.equal(data.MG, 'Hello world');
+				checkComplete();
+    	});
+
+    	xpush2.login(USERS[2],PASS[2],function(err, data){
+    		assert.equal( USERS[2],  data.user.U );
+    		checkComplete();
+    	});
+
+      var count = 2;
+      var checkComplete = function(){       
+        --count; 
+        if( !count) {
+          done();
+        }
+      };
+      
+    });
+
+	});
 });
