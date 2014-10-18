@@ -1,7 +1,7 @@
 {
   "name": "xpush-client",
   "description": "Realtime communication channel server and node module.",
-  "version": "0.0.5",
+  "version": "0.0.6",
   "keywords": [
     "push",
     "websocket",
@@ -21,7 +21,9 @@
     }
   ],
   "dependencies": {
-    "socket.io-client": "1.1.0"
+    "socket.io-client": "1.1.0",
+    "mongodb": "^2.0.3",
+    "mime" : "^1.2.11"
   },
   "repository": {
     "type": "git",
