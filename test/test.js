@@ -113,13 +113,19 @@ describe('XPUSH Client Test', function(){
   });
 
   describe("#Login Users", function() {
-
+    var serverUrl;
     // auth, node
     it("login user1", function(done) {
       xpush.login(USERS[0],PASS[0],function(err, data){
+        serverUrl = data.serverUrl;
         assert.equal( USERS[0], data.user.U );
         done();
       });
+    });
+
+    it("check node", function(done) {
+      assert.equal( "http://demo.stalk.io:9000", serverUrl );
+      done();
     });
 
     it("login user2", function(done) {
@@ -133,7 +139,7 @@ describe('XPUSH Client Test', function(){
 
   describe("#Users Test", function() {
 
-    // user-query
+    // `user-query`
     it("Query user", function(done) {
       var param = {query : {'U':'user1'}, column: { U: 1, DT: 1, _id: 0 } };
       xpush.queryUser( param, function( err, userArray, count ){
@@ -146,7 +152,7 @@ describe('XPUSH Client Test', function(){
   var randomChannel;
   describe("#Channel Create Test", function() {
 
-    // channel-create
+    // `channel-create`
     it("create random channel without data", function(done) {
 
       xpush.createChannel(['user1'], function(err, data){
@@ -179,7 +185,7 @@ describe('XPUSH Client Test', function(){
 
   describe("#Channel Manage Test", function() {
 
-    // channe-update
+    // `channe-update`
     it("Update Channel", function(done) {
 
       xpush.updateChannel( 'channel02', { $set:{'DT':{'NM':'updateChannelName03'}}}, function(err, result){
@@ -189,7 +195,7 @@ describe('XPUSH Client Test', function(){
 
     });
 
-    // channel-exit
+    // `channel-exit`
     it("Exit Channel", function(done) {
 
       xpush.exitChannel(randomChannel, function(err, data){
@@ -199,7 +205,7 @@ describe('XPUSH Client Test', function(){
 
     });
 
-    //channel-get
+    // `channel-list`
     it("Get Channels", function(done) {
 
       xpush.getChannels(function(err, datas){
@@ -209,12 +215,12 @@ describe('XPUSH Client Test', function(){
 
     });
 
-    //channel-join
+    // `channel-join`
     it("Join Channel", function(done) {
 
       xpush.joinChannel( 'channel01', {'U':['user3']}, function(result){
 
-        // channel-get
+        // `channel-get`
         xpush.getChannelData( 'channel01', function(err, result){
           assert.equal(3, result.US.length);
           done();
@@ -229,10 +235,10 @@ describe('XPUSH Client Test', function(){
 
     it("addUserToGroup", function(done) {
 
-      //emit group-add
+      //emit `group-add`
       xpush.addUserToGroup( 'user1', ['user2','user3'], function( err, result ){
 
-        // Get group user by emitting group-list
+        // Get group user by emitting `group-list`
         xpush.getGroupUsers( 'user1', function( err, result ){
           assert.equal( 2,  result.length );
           done();
@@ -243,10 +249,10 @@ describe('XPUSH Client Test', function(){
 
     it("removeUserFromGroup", function(done) {
 
-      // emit group-remove
+      // emit `group-remove`
       xpush.removeUserFromGroup( 'user1', 'user2', function( err, result ){
 
-        // Get group user by emitting group-list
+        // Get group user by emitting `group-list`
         xpush.getGroupUsers( 'user1', function( err, result ){
           assert.equal( 1,  result.length );
           done();
@@ -285,7 +291,7 @@ describe('XPUSH Client Test', function(){
     });
 
     it("unread message user3", function(done) {
-
+      // `message-unread`, `message-received`
       xpush2.on( 'message', function( ch, name, data ){
         assert.equal(data.MG, 'Hello world');
         checkComplete();
@@ -316,6 +322,7 @@ describe('XPUSH Client Test', function(){
     it("Upload file with rest api", function(done) {
       var options = { name: 'sample.png' };
 
+      // Upload file with rest api
       xpush.uploadFile( 'channel01', 'sample.png', options,
         function( data ){
           uploadResult = JSON.parse(data).result;
