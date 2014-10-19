@@ -314,12 +314,9 @@ describe('XPUSH Client Test', function(){
     var uploadResult;
 
     it("Upload file with rest api", function(done) {
-      var options = { name: 'file.txt' };
+      var options = { name: 'sample.png' };
 
-      xpush.uploadFile( 'channel01', 'file.txt', options, 
-        function( prg ){
-          console.log( prg );
-        },
+      xpush.uploadFile( 'channel01', 'sample.png', options,
         function( data ){
           uploadResult = JSON.parse(data).result;
           assert.equal('ok', JSON.parse(data).status); 
@@ -329,10 +326,9 @@ describe('XPUSH Client Test', function(){
 
     });
 
-    it("Download file with rest api", function(done) {
-      console.log( uploadResult );
+    it("Get file url for download", function(done) {
       var url = xpush.getFileUrl( uploadResult.channel, uploadResult.name );
-      ssert.equal('ok', JSON.parse(data).status);
+      assert.ok(url);
       done();
     });
   });
