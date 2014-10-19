@@ -11,7 +11,7 @@ var appId = 'xpush-client';
 // Clear mongoDB
 var mongo = require('../node_modules/mongodb');
 
-var host = 'localhost';
+var host = 'demo.stalk.io';
 var client;
 
 describe('XPUSH Client Test', function(){
