@@ -11,7 +11,9 @@ var appId = 'xpush-client';
 // Clear mongoDB
 var mongo = require('../node_modules/mongodb');
 
-var host = 'demo.stalk.io';
+var host = 'localhost';
+var expected_channel_server_url = 'http://localhost:8080';
+
 var client;
 
 describe('XPUSH Client Test', function(){
@@ -124,7 +126,7 @@ describe('XPUSH Client Test', function(){
     });
 
     it("check node", function(done) {
-      assert.equal( "http://demo.stalk.io:9000", serverUrl );
+      assert.equal( expected_channel_server_url, serverUrl );
       done();
     });
 
